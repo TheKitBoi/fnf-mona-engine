@@ -42,8 +42,11 @@ jobs:
           haxelib install flixel-ui
           haxelib install flixel-addons
           haxelib install newgrounds
+          haxelib install actuate
           haxelib git polymod https://github.com/larsiusprime/polymod.git
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib git extension-webm https://github.com/KadeDev/extension-webm
+          haxelib run lime rebuild extension-webm linux
           haxelib install hxcpp-debug-server
           haxelib list
       - name: Create APIStuff
@@ -86,6 +89,8 @@ jobs:
           haxelib install newgrounds
           haxelib git polymod https://github.com/larsiusprime/polymod.git
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib git extension-webm https://github.com/KadeDev/extension-webm
+          haxelib run lime rebuild extension-webm windows
           haxelib install hxcpp-debug-server
           haxelib list
         shell: cmd
@@ -126,6 +131,8 @@ jobs:
           haxelib install newgrounds
           haxelib git polymod https://github.com/larsiusprime/polymod.git
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib git extension-webm https://github.com/KadeDev/extension-webm
+          haxelib run lime rebuild extension-webm macos
           haxelib install hxcpp-debug-server
           haxelib list
       - name: Create APIStuff
@@ -165,6 +172,8 @@ jobs:
           haxelib install newgrounds
           haxelib git polymod https://github.com/larsiusprime/polymod.git
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib git extension-webm https://github.com/KadeDev/extension-webm
+          haxelib run lime rebuild extension-webm windows
           haxelib install hxcpp-debug-server
           haxelib list
       - name: Create APIStuff
