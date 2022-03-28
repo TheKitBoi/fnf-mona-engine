@@ -1,6 +1,6 @@
 package;
 
-#if desktop
+#if cpp
 import Discord.DiscordClient;
 import sys.thread.Thread;
 #end
@@ -9,6 +9,7 @@ import flixel.FlxG;
 import flixel.util.FlxSave;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.FlxG;
 import flixel.FlxCamera;
 import flixel.math.FlxMath;
 import flixel.addons.display.FlxGridOverlay;
@@ -31,7 +32,7 @@ import flixel.util.FlxTimer;
 import io.newgrounds.NG;
 import lime.app.Application;
 import openfl.Assets;
-
+import openfl.Lib;
 using StringTools;
 
 class TitleState extends MusicBeatState
@@ -84,24 +85,16 @@ class TitleState extends MusicBeatState
 
 		Settings.loadsettings();
 
-		if (FlxG.save.data.imagecache && !CachedFrames.loaded)
-			{
-				abletocache = true;
-			}
-			else
-				{
-					abletocache = false;
-				}
 		
 		trace('default selected: ' + FlxG.save.data.curselected);
 		
 			
-		FlxG.save.bind('monaengine', 'snipergaming888');
+		FlxG.save.bind('swiftengine', 'snipergaming888');
 
 		Highscore.load();
 		keyCheck();
 
-		#if desktop
+		#if cpp
 		if (FlxG.save.data.discordrpc)
 			{
 				DiscordClient.initialize();
@@ -112,7 +105,7 @@ class TitleState extends MusicBeatState
 			}
 		#end
 
-		#if desktop
+		#if cpp
 		if (FlxG.save.data.discordrpc)
 			DiscordClient.changePresence("Looking at the Title Menu", null);
 		// Updating Discord Rich Presence
@@ -134,313 +127,26 @@ class TitleState extends MusicBeatState
 				StoryMenuState.weekUnlocked[0] = true;
 		}
 
-		if (FlxG.save.data.imagecache)
-			{
-				if(abletocache && !CachedFrames.loaded)
+		
+				new FlxTimer().start(0.0, function(tmr:FlxTimer)
 					{
-						FlxG.switchState(new Cache());	
-						abletocache = false;
-					}
-				else if (FlxG.save.data.imagecache && CachedFrames.loaded)
-					{
-						new FlxTimer().start(5, function(tmr:FlxTimer)
+						if (FlxG.save.data.imagecache && Caching.notyetcached || FlxG.save.data.soundcache && Caching.notyetcached || FlxG.save.data.musiccache && Caching.notyetcached || FlxG.save.data.songcache && Caching.notyetcached)
 							{
-								startIntro();
-							});
-					
-						if (FlxG.save.data.soundcache)
-							{
-								FlxG.sound.cache(Paths.soundRandom('missnote', 1, 3));
-								FlxG.sound.cache(Paths.sound('train_passes', 'shared'));
-								FlxG.sound.cache(Paths.sound('pixelText'));
-								FlxG.sound.cache(Paths.sound('clickText'));
-								FlxG.sound.cache(Paths.sound('Lights_Turn_On'));
-								FlxG.sound.cache(Paths.sound('ANGRY'));
-								FlxG.sound.cache(Paths.sound('Senpai_Dies'));
-								FlxG.sound.cache(Paths.sound('intro3'));
-								FlxG.sound.cache(Paths.sound('intro2'));
-								FlxG.sound.cache(Paths.sound('intro3'));
-								FlxG.sound.cache(Paths.sound('introGo'));
-								FlxG.sound.cache(Paths.sound('intro3-pixel'));
-								FlxG.sound.cache(Paths.sound('intro2-pixel'));
-								FlxG.sound.cache(Paths.sound('intro3-pixel'));
-								FlxG.sound.cache(Paths.sound('introGo-pixel'));
-								FlxG.sound.cache(Paths.sound('Lights_Shut_off'));
-								FlxG.sound.cache(Paths.soundRandom('carPass', 0, 1));
-								FlxG.sound.cache(Paths.soundRandom('thunder_', 1, 2));
-								trace('sounds cached');
-								///sounds
+								FlxG.switchState(new Caching());
 							}
-			
-							if (FlxG.save.data.musiccache)
+							else if (FlxG.random.bool(5))
 								{
-									FlxG.sound.cache(Paths.music('LunchboxScary', 'shared'));
-									FlxG.sound.cache(Paths.music('Lunchbox', 'shared'));
-									FlxG.sound.cache(Paths.music('breakfast'));
-									FlxG.sound.cache(Paths.music('title'));
-									FlxG.sound.cache(Paths.music('freakyMenu'));
-									FlxG.sound.cache(Paths.music('gameOver'));
-									FlxG.sound.cache(Paths.music('gameOverEnd'));
-									FlxG.sound.cache(Paths.music('gameOver-pixel'));
-									FlxG.sound.cache(Paths.music('gameOverEnd-pixel'));
-									trace('music cached');
+									old = true;
+									trace('old intro');
+									FlxG.switchState(new TitleStateOld());
 								}
-
-								if (FlxG.save.data.songcache)
+								else
 									{
-									FlxG.sound.cache(Paths.inst("tutorial"));	   
-	                            	FlxG.sound.cache(Paths.inst("bopeebo"));
-									FlxG.sound.cache(Paths.inst("fresh"));
-									FlxG.sound.cache(Paths.inst("dadbattle"));
-									FlxG.sound.cache(Paths.inst("spookeez"));
-									FlxG.sound.cache(Paths.inst("south"));
-									FlxG.sound.cache(Paths.inst("monster"));
-									FlxG.sound.cache(Paths.inst("pico"));
-									FlxG.sound.cache(Paths.inst("philly"));
-									FlxG.sound.cache(Paths.inst("blammed"));
-									FlxG.sound.cache(Paths.inst("satin-panties"));
-									FlxG.sound.cache(Paths.inst("high"));
-									FlxG.sound.cache(Paths.inst("milf"));
-									FlxG.sound.cache(Paths.inst("avidity"));
-									FlxG.sound.cache(Paths.inst("cocoa"));
-									FlxG.sound.cache(Paths.inst("eggnog"));
-									FlxG.sound.cache(Paths.inst("winter-horrorland"));
-									FlxG.sound.cache(Paths.inst("senpai"));
-									FlxG.sound.cache(Paths.inst("roses"));
-									FlxG.sound.cache(Paths.inst("thorns"));
-									trace('chached inst');
-									FlxG.sound.cache(Paths.voices("tutorial"));	   
-	                            	FlxG.sound.cache(Paths.voices("bopeebo"));
-									FlxG.sound.cache(Paths.voices("fresh"));
-									FlxG.sound.cache(Paths.voices("dadbattle"));
-									FlxG.sound.cache(Paths.voices("spookeez"));
-									FlxG.sound.cache(Paths.voices("south"));
-									FlxG.sound.cache(Paths.voices("monster"));
-									FlxG.sound.cache(Paths.voices("pico"));
-									FlxG.sound.cache(Paths.voices("philly"));
-									FlxG.sound.cache(Paths.voices("blammed"));
-									FlxG.sound.cache(Paths.voices("satin-panties"));
-									FlxG.sound.cache(Paths.voices("high"));
-									FlxG.sound.cache(Paths.voices("milf"));
-									FlxG.sound.cache(Paths.voices("avidity"));
-									FlxG.sound.cache(Paths.voices("cocoa"));
-									FlxG.sound.cache(Paths.voices("eggnog"));
-									FlxG.sound.cache(Paths.voices("winter-horrorland"));
-									FlxG.sound.cache(Paths.voices("senpai"));
-									FlxG.sound.cache(Paths.voices("roses"));
-									FlxG.sound.cache(Paths.voices("thorns"));
-									trace('chached voices');
+										startIntro();
 									}
-					}
-					else
-					{
-						trace('cannot cache');
-							{
-								if (FlxG.save.data.soundcache)
-									{
-										FlxG.sound.cache(Paths.soundRandom('missnote', 1, 3));
-										FlxG.sound.cache(Paths.sound('train_passes', 'shared'));
-										FlxG.sound.cache(Paths.sound('pixelText'));
-										FlxG.sound.cache(Paths.sound('clickText'));
-										FlxG.sound.cache(Paths.sound('Lights_Turn_On'));
-										FlxG.sound.cache(Paths.sound('ANGRY'));
-										FlxG.sound.cache(Paths.sound('Senpai_Dies'));
-										FlxG.sound.cache(Paths.sound('intro3'));
-										FlxG.sound.cache(Paths.sound('intro2'));
-										FlxG.sound.cache(Paths.sound('intro3'));
-										FlxG.sound.cache(Paths.sound('introGo'));
-										FlxG.sound.cache(Paths.sound('intro3-pixel'));
-										FlxG.sound.cache(Paths.sound('intro2-pixel'));
-										FlxG.sound.cache(Paths.sound('intro3-pixel'));
-										FlxG.sound.cache(Paths.sound('introGo-pixel'));
-										FlxG.sound.cache(Paths.sound('Lights_Shut_off'));
-										FlxG.sound.cache(Paths.soundRandom('carPass', 0, 1));
-										FlxG.sound.cache(Paths.soundRandom('thunder_', 1, 2));
-										trace('sounds cached');
-										///sounds
-									}
-					
-									if (FlxG.save.data.musiccache)
-										{
-											FlxG.sound.cache(Paths.music('LunchboxScary', 'shared'));
-											FlxG.sound.cache(Paths.music('Lunchbox', 'shared'));
-											FlxG.sound.cache(Paths.music('breakfast'));
-											FlxG.sound.cache(Paths.music('title'));
-											FlxG.sound.cache(Paths.music('freakyMenu'));
-											FlxG.sound.cache(Paths.music('gameOver'));
-											FlxG.sound.cache(Paths.music('gameOverEnd'));
-											FlxG.sound.cache(Paths.music('gameOver-pixel'));
-											FlxG.sound.cache(Paths.music('gameOverEnd-pixel'));
-											trace('music cached');
-										}
-
-										if (FlxG.save.data.songcache)
-											{
-											FlxG.sound.cache(Paths.inst("tutorial"));	   
-											FlxG.sound.cache(Paths.inst("bopeebo"));
-											FlxG.sound.cache(Paths.inst("fresh"));
-											FlxG.sound.cache(Paths.inst("dadbattle"));
-											FlxG.sound.cache(Paths.inst("spookeez"));
-											FlxG.sound.cache(Paths.inst("south"));
-											FlxG.sound.cache(Paths.inst("monster"));
-											FlxG.sound.cache(Paths.inst("pico"));
-											FlxG.sound.cache(Paths.inst("philly"));
-											FlxG.sound.cache(Paths.inst("blammed"));
-											FlxG.sound.cache(Paths.inst("satin-panties"));
-											FlxG.sound.cache(Paths.inst("high"));
-											FlxG.sound.cache(Paths.inst("milf"));
-											FlxG.sound.cache(Paths.inst("avidity"));
-											FlxG.sound.cache(Paths.inst("cocoa"));
-											FlxG.sound.cache(Paths.inst("eggnog"));
-											FlxG.sound.cache(Paths.inst("winter-horrorland"));
-											FlxG.sound.cache(Paths.inst("senpai"));
-											FlxG.sound.cache(Paths.inst("roses"));
-											FlxG.sound.cache(Paths.inst("thorns"));
-											trace('chached inst');
-											FlxG.sound.cache(Paths.voices("tutorial"));	   
-											FlxG.sound.cache(Paths.voices("bopeebo"));
-											FlxG.sound.cache(Paths.voices("fresh"));
-											FlxG.sound.cache(Paths.voices("dadbattle"));
-											FlxG.sound.cache(Paths.voices("spookeez"));
-											FlxG.sound.cache(Paths.voices("south"));
-											FlxG.sound.cache(Paths.voices("monster"));
-											FlxG.sound.cache(Paths.voices("pico"));
-											FlxG.sound.cache(Paths.voices("philly"));
-											FlxG.sound.cache(Paths.voices("blammed"));
-											FlxG.sound.cache(Paths.voices("satin-panties"));
-											FlxG.sound.cache(Paths.voices("high"));
-											FlxG.sound.cache(Paths.voices("milf"));
-											FlxG.sound.cache(Paths.voices("avidity"));
-											FlxG.sound.cache(Paths.voices("cocoa"));
-											FlxG.sound.cache(Paths.voices("eggnog"));
-											FlxG.sound.cache(Paths.voices("winter-horrorland"));
-											FlxG.sound.cache(Paths.voices("senpai"));
-											FlxG.sound.cache(Paths.voices("roses"));
-											FlxG.sound.cache(Paths.voices("thorns"));
-											trace('chached voices');
-											}
-								new FlxTimer().start(0.0, function(tmr:FlxTimer)
-									{
-										if (FlxG.random.bool(5))
-										{
-											old = true;
-											trace('old intro');
-											FlxG.switchState(new TitleStateOld());
-										}
-										else
-											{
-												startIntro();
-											}
 											
 										
-									});
-									
-							  }
-					}
-			}
-			else
-				{
-					if (FlxG.save.data.soundcache)
-						{
-							FlxG.sound.cache(Paths.soundRandom('missnote', 1, 3));
-							FlxG.sound.cache(Paths.sound('train_passes', 'shared'));
-							FlxG.sound.cache(Paths.sound('pixelText'));
-							FlxG.sound.cache(Paths.sound('clickText'));
-							FlxG.sound.cache(Paths.sound('Lights_Turn_On'));
-							FlxG.sound.cache(Paths.sound('ANGRY'));
-							FlxG.sound.cache(Paths.sound('Senpai_Dies'));
-							FlxG.sound.cache(Paths.sound('intro3'));
-							FlxG.sound.cache(Paths.sound('intro2'));
-							FlxG.sound.cache(Paths.sound('intro3'));
-							FlxG.sound.cache(Paths.sound('introGo'));
-							FlxG.sound.cache(Paths.sound('intro3-pixel'));
-							FlxG.sound.cache(Paths.sound('intro2-pixel'));
-							FlxG.sound.cache(Paths.sound('intro3-pixel'));
-							FlxG.sound.cache(Paths.sound('introGo-pixel'));
-							FlxG.sound.cache(Paths.sound('Lights_Shut_off'));
-							FlxG.sound.cache(Paths.soundRandom('carPass', 0, 1));
-							FlxG.sound.cache(Paths.soundRandom('thunder_', 1, 2));
-							trace('sounds cached');
-							///sounds
-						}
-		
-						if (FlxG.save.data.musiccache)
-							{
-								FlxG.sound.cache(Paths.music('LunchboxScary', 'shared'));
-								FlxG.sound.cache(Paths.music('Lunchbox', 'shared'));
-								FlxG.sound.cache(Paths.music('breakfast'));
-								FlxG.sound.cache(Paths.music('title'));
-								FlxG.sound.cache(Paths.music('freakyMenu'));
-								FlxG.sound.cache(Paths.music('gameOver'));
-								FlxG.sound.cache(Paths.music('gameOverEnd'));
-								FlxG.sound.cache(Paths.music('gameOver-pixel'));
-								FlxG.sound.cache(Paths.music('gameOverEnd-pixel'));
-								trace('music cached');
-							}
-
-							if (FlxG.save.data.songcache)
-								{
-								FlxG.sound.cache(Paths.inst("tutorial"));	   
-								FlxG.sound.cache(Paths.inst("bopeebo"));
-								FlxG.sound.cache(Paths.inst("fresh"));
-								FlxG.sound.cache(Paths.inst("dadbattle"));
-								FlxG.sound.cache(Paths.inst("spookeez"));
-								FlxG.sound.cache(Paths.inst("south"));
-								FlxG.sound.cache(Paths.inst("monster"));
-								FlxG.sound.cache(Paths.inst("pico"));
-								FlxG.sound.cache(Paths.inst("philly"));
-								FlxG.sound.cache(Paths.inst("blammed"));
-								FlxG.sound.cache(Paths.inst("satin-panties"));
-								FlxG.sound.cache(Paths.inst("high"));
-								FlxG.sound.cache(Paths.inst("milf"));
-								FlxG.sound.cache(Paths.inst("avidity"));
-								FlxG.sound.cache(Paths.inst("cocoa"));
-								FlxG.sound.cache(Paths.inst("eggnog"));
-								FlxG.sound.cache(Paths.inst("winter-horrorland"));
-								FlxG.sound.cache(Paths.inst("senpai"));
-								FlxG.sound.cache(Paths.inst("roses"));
-								FlxG.sound.cache(Paths.inst("thorns"));
-								trace('chached inst');
-								FlxG.sound.cache(Paths.voices("tutorial"));	   
-								FlxG.sound.cache(Paths.voices("bopeebo"));
-								FlxG.sound.cache(Paths.voices("fresh"));
-								FlxG.sound.cache(Paths.voices("dadbattle"));
-								FlxG.sound.cache(Paths.voices("spookeez"));
-								FlxG.sound.cache(Paths.voices("south"));
-								FlxG.sound.cache(Paths.voices("monster"));
-								FlxG.sound.cache(Paths.voices("pico"));
-								FlxG.sound.cache(Paths.voices("philly"));
-								FlxG.sound.cache(Paths.voices("blammed"));
-								FlxG.sound.cache(Paths.voices("satin-panties"));
-								FlxG.sound.cache(Paths.voices("high"));
-								FlxG.sound.cache(Paths.voices("milf"));
-								FlxG.sound.cache(Paths.voices("avidity"));
-								FlxG.sound.cache(Paths.voices("cocoa"));
-								FlxG.sound.cache(Paths.voices("eggnog"));
-								FlxG.sound.cache(Paths.voices("winter-horrorland"));
-								FlxG.sound.cache(Paths.voices("senpai"));
-								FlxG.sound.cache(Paths.voices("roses"));
-								FlxG.sound.cache(Paths.voices("thorns"));
-								trace('chached voices');
-								}
-					new FlxTimer().start(0.0, function(tmr:FlxTimer)
-						{
-							if (FlxG.random.bool(5))
-							{
-								old = true;
-								trace('old intro');
-								FlxG.switchState(new TitleStateOld());
-							}
-							else
-								{
-									startIntro();
-								}
-								
-							
-						});
-						
-  				}
-
+					});
 
 	}
 
@@ -453,24 +159,29 @@ class TitleState extends MusicBeatState
 	{
 		if (!initialized)
 		{
+			
+				if (FlxG.save.data.togglecap)
+					{
+						openfl.Lib.current.stage.frameRate = FlxG.save.data.fpsCap;
+						trace('CAP CAP CAP CAP');
+					}
+				
 			trace('liam is a nerd');
 			var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
 			diamond.persist = true;
 			diamond.destroyOnNoUse = false;
 
-					{
-						FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);                           ///0.7
-						FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.5, new FlxPoint(0, -1), {asset: diamond, width: 32, height: 32},
-						new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));             ///0.5
-					FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.3, new FlxPoint(0, 1),
-						{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
-						old = false;
-					}
-				
-
+			FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 1, new FlxPoint(0, -1), {asset: diamond, width: 32, height: 32},
+				new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
+			FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, new FlxPoint(0, 1),
+				{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 
 			transIn = FlxTransitionableState.defaultTransIn;
 			transOut = FlxTransitionableState.defaultTransOut;
+
+					
+			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+			old = false;			
 
 			// HAD TO MODIFY SOME BACKEND SHIT
 			// IF THIS PR IS HERE IF ITS ACCEPTED UR GOOD TO GO
@@ -496,6 +207,9 @@ class TitleState extends MusicBeatState
 
 			logoBl = new FlxSprite(-150, 0);
 			logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
+			if (FlxG.save.data.optimizations)
+			logoBl.frames = Paths.getSparrowAtlas('logoBumpin-opt');
+			if (FlxG.save.data.antialiasing)
 			logoBl.antialiasing = true;
 			logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
 			logoBl.animation.play('bump');
@@ -506,14 +220,19 @@ class TitleState extends MusicBeatState
 	
 			gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
 			gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
+			if (FlxG.save.data.optimizations)
+			gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle-opt');	
 			gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
 			gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+			if (FlxG.save.data.antialiasing)
 			gfDance.antialiasing = true;
 			add(gfDance);
 			add(logoBl);
 	
 			titleText = new FlxSprite(100, FlxG.height * 0.8);
 			titleText.frames = Paths.getSparrowAtlas('titleEnter');
+			if (FlxG.save.data.optimizations)
+			titleText.frames = Paths.getSparrowAtlas('titleEnter-opt');		
 			titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
 			titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
 			titleText.antialiasing = true;
@@ -522,9 +241,11 @@ class TitleState extends MusicBeatState
 			// titleText.screenCenter(X);
 			add(titleText);
 		
-
 		var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.image('logo'));
+		if (FlxG.save.data.optimizations)
+		logo = new FlxSprite().loadGraphic(Paths.image('logo-opt'));
 		logo.screenCenter();
+		if (FlxG.save.data.antialiasing)
 		logo.antialiasing = true;
 		// add(logo);
 
@@ -544,18 +265,19 @@ class TitleState extends MusicBeatState
 		// credTextShit.alignment = CENTER;
 
 		credTextShit.visible = false;
-
+		if (FlxG.save.data.optimizations)
+		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('newgrounds_logo-opt'));
+		else
 		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('newgrounds_logo'));
 		add(ngSpr);
 		ngSpr.visible = false;
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
 		ngSpr.updateHitbox();
 		ngSpr.screenCenter(X);
+		if (FlxG.save.data.antialiasing)
 		ngSpr.antialiasing = true;
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
-
-		FlxG.mouse.visible = false;
 
 		if (initialized)
 			skipIntro();
@@ -563,6 +285,12 @@ class TitleState extends MusicBeatState
 			initialized = true;
 
 		// credGroup.add(credTextShit);
+
+		if (FlxG.mouse.visible = true)
+			{
+				FlxG.mouse.visible = false;
+				trace('no mouse');
+			}
 	}
 
 	function getIntroTextShit():Array<Array<String>>
@@ -804,14 +532,13 @@ class TitleState extends MusicBeatState
 				 // credTextShit.text = 'In association \nwith';
 				 // credTextShit.screenCenter();
 				 case 5:
-					 createCoolText(['mona engine', 'by']);
+					 createCoolText(['swift engine', 'by']);
 				 case 7:
-					 #if windows
+					 #if cpp
 					 addMoreTextcolorsnipergaming('sniper gaming');
+					 #else
+					 addMoreText('sniper gaming');
 					 #end
-				 #if web	
-				  addMoreText('sniper gaming');
-				  #end
 				 // credTextShit.text += '\nNewgrounds';
 				 case 8:
 					 deleteCoolText();
@@ -889,7 +616,7 @@ class TitleState extends MusicBeatState
 					 addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
 
 				case 31:
-					 addMoreText('Mona Engine'); // credTextShit.text += '\nFunkin';
+					 addMoreText('swift Engine'); // credTextShit.text += '\nFunkin';
 	 
 				 case 32:
 					 skipIntro();
@@ -912,14 +639,13 @@ class TitleState extends MusicBeatState
 						// credTextShit.text = 'In association \nwith';
 						// credTextShit.screenCenter();
 						case 5:
-							createCoolText(['mona engine', 'by']);
+							createCoolText(['swift engine', 'by']);
 						case 7:
-							#if windows
+							#if cpp
 							addMoreTextcolorsnipergaming('sniper gaming');
+							#else
+							addMoreText('sniper gaming');
 							#end
-						#if web	
-						 addMoreText('sniper gaming');
-						 #end
 						// credTextShit.text += '\nNewgrounds';
 						case 8:
 							deleteCoolText();
